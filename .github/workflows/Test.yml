@@ -1,23 +1,21 @@
-name: CI Workflow
+name: Failed Test Scenario
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run Tests
-        run: echo "Running tests..."
+      - name: Run Failing Test
+        # Returning any non-zero exit code marks the step and job as failed
+        run: |
+          echo "Simulating a test failure..."
+          exit 1 
 
   deploy:
     runs-on: ubuntu-latest
-    needs: test  # This ensures deploy only runs if test passes
+    needs: test  # This job will be skipped because 'test' failed
     steps:
-      - uses: actions/checkout@v4
-      - name: Deploy
-        run: echo "Deploying application..."
+      - name: Deploying
+        run: echo "This will not run."
